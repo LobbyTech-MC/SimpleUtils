@@ -43,8 +43,9 @@ public final class SimpleWorkbench extends AbstractContainer implements Listener
     public static final SlimefunItemStack ITEM = new SlimefunItemStack(
             "SIMPLE_WORKBENCH",
             Material.CRAFTING_TABLE,
-            "&6Simple Workbench",
-            "&7Can craft both vanilla and slimefun recipes"
+            "&6融合工作台",
+            "&7既可以合成原版物品",
+            "&7也可以合成粘液科技高级工作台物品"
     );
     
     private final ShapedRecipeMap recipes = new ShapedRecipeMap();

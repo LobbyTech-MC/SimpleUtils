@@ -14,5 +14,15 @@ public final class ShapedOutput {
 
     private final ItemStack output;
     private final int[] inputAmounts;
+	public ShapedOutput(ItemStack output, int[] inputAmounts) {
+		this.output = output;
+		this.inputAmounts = inputAmounts;
+	}
+	public int[] getInputAmounts() {
+		return inputAmounts;
+	}
+	public ItemStack getOutput() {
+		return output;
+	}
     
 }

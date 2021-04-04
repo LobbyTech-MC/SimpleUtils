@@ -16,8 +16,8 @@ public final class SimpleElevator extends SlimefunItem implements Listener {
     public static final SlimefunItemStack ITEM = new SlimefunItemStack(
             "SIMPLE_ELEVATOR",
             Material.QUARTZ_BLOCK,
-            "&fSimple Elevator",
-            "&7Crouch to go down, Jump to go up"
+            "&f简易电梯",
+            "&7下蹲下降, 跳跃上升"
     );
 
     public SimpleElevator() {

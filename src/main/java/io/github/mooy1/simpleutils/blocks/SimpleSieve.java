@@ -29,8 +29,8 @@ public final class SimpleSieve extends MultiBlockMachine {
     public static final SlimefunItemStack ITEM = new SlimefunItemStack(
             "SIMPLE_SIEVE",
             Material.COMPOSTER,
-            "&6Simple Sieve",
-            "&7Sifts gravel into dusts and materials"
+            "&6简易筛矿机",
+            "&7将碎石变成矿粉或材料"
     );
     public static final RecipeType TYPE = new RecipeType(PluginUtils.getKey("simple_sieve"), ITEM);
     
@@ -65,7 +65,7 @@ public final class SimpleSieve extends MultiBlockMachine {
         this.recipes.add(item, chance);
         this.displayRecipes.add(new ItemStack(Material.GRAVEL));
         ItemStack clone = item.clone();
-        LoreUtils.addLore(clone, "", "&6Chance: " + chance);
+        LoreUtils.addLore(clone, "", "&6几率: " + chance);
         this.displayRecipes.add(clone);
     }
 
@@ -80,7 +80,7 @@ public final class SimpleSieve extends MultiBlockMachine {
         ItemStack input = p.getInventory().getItemInMainHand();
         
         if (StackUtils.getID(input) != null || input.getType() != Material.GRAVEL) {
-            p.sendMessage(ChatColor.RED + "Invalid Recipe!");
+            p.sendMessage(ChatColor.RED + "不存在的配方!");
             return;
         }
         

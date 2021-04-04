@@ -25,10 +25,10 @@ public final class Setup {
 
         // tools
         new SimpleWrench().register(plugin);
-        new MiningHammer(Material.IRON_PICKAXE, SlimefunItems.COPPER_INGOT, "&6Copper", 3, 1).register(plugin);
-        new MiningHammer(Material.DIAMOND_PICKAXE, new ItemStack(Material.DIAMOND), "&bDiamond", 3, 1).register(plugin);
-        new MiningHammer(Material.IRON_PICKAXE, SlimefunItems.REINFORCED_ALLOY_INGOT, "&7Reinforced", 3, 5).register(plugin);
-        new MiningHammer(Material.NETHERITE_PICKAXE, SlimefunItems.CARBONADO, "&8Carbonado", 5, 5).register(plugin);
+        new MiningHammer(Material.IRON_PICKAXE, SlimefunItems.COPPER_INGOT, "&6铜", 3, 1).register(plugin);
+        new MiningHammer(Material.DIAMOND_PICKAXE, new ItemStack(Material.DIAMOND), "&b钻石", 3, 1).register(plugin);
+        new MiningHammer(Material.IRON_PICKAXE, SlimefunItems.REINFORCED_ALLOY_INGOT, "&7强化合金", 3, 5).register(plugin);
+        new MiningHammer(Material.NETHERITE_PICKAXE, SlimefunItems.CARBONADO, "&8黑金刚石", 5, 5).register(plugin);
         
         // dusts
         new SlimefunItem(Items.CATEGORY, Items.COBALT_DUST, SimpleSieve.TYPE, fill(new ItemStack(Material.GRAVEL))).register(plugin);
