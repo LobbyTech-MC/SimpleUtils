@@ -1,12 +1,11 @@
 package io.github.mooy1.simpleutils.blocks;
 
-import io.github.mooy1.infinitylib.core.PluginUtils;
 import io.github.mooy1.infinitylib.items.LoreUtils;
 import io.github.mooy1.infinitylib.items.StackUtils;
-import io.github.mooy1.simpleutils.Items;
+import io.github.mooy1.simpleutils.SimpleUtils;
 import io.github.thebusybiscuit.slimefun4.core.multiblocks.MultiBlockMachine;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.collections.RandomizedSet;
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
@@ -24,41 +23,27 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class SimpleSieve extends MultiBlockMachine {
-    
-    public static final SlimefunItemStack ITEM = new SlimefunItemStack(
-            "SIMPLE_SIEVE",
-            Material.COMPOSTER,
-            "&6简易筛矿机",
-            "&7将碎石变成矿粉或材料"
-    );
-    public static final RecipeType TYPE = new RecipeType(PluginUtils.getKey("simple_sieve"), ITEM);
-    
+public final class Sieve extends MultiBlockMachine {
+
     private final RandomizedSet<ItemStack> recipes = new RandomizedSet<>();
     private final List<ItemStack> display = new ArrayList<>();
     
-    public SimpleSieve() {
-        super(Items.CATEGORY, ITEM, new ItemStack[] {
-            null, null, null,
-            null, new ItemStack(Material.OAK_TRAPDOOR), null,
-            null, new ItemStack(Material.COMPOSTER), null
-        }, BlockFace.SELF);
+    public Sieve(Category category, SlimefunItemStack item, ItemStack[] recipe, BlockFace face) {
+        super(category, item, recipe, face);
 
-        this.recipes.add(new ItemStack(Material.AIR), 50);
-        addRecipe(SlimefunItems.ALUMINUM_DUST, 4);
-        addRecipe(SlimefunItems.COPPER_DUST, 4);
-        addRecipe(SlimefunItems.IRON_DUST, 4);
-        addRecipe(SlimefunItems.LEAD_DUST, 4);
-        addRecipe(SlimefunItems.GOLD_DUST, 4);
-        addRecipe(SlimefunItems.ZINC_DUST, 4);
-        addRecipe(SlimefunItems.MAGNESIUM_DUST, 4);
-        addRecipe(SlimefunItems.SILVER_DUST, 4);
-        addRecipe(SlimefunItems.TIN_DUST, 4);
-        addRecipe(new ItemStack(Material.CLAY_BALL), 4);
+        this.recipes.add(new ItemStack(Material.AIR), 72);
+        addRecipe(SlimefunItems.ALUMINUM_DUST, 2);
+        addRecipe(SlimefunItems.COPPER_DUST, 3);
+        addRecipe(SlimefunItems.IRON_DUST, 2);
+        addRecipe(SlimefunItems.LEAD_DUST, 1);
+        addRecipe(SlimefunItems.GOLD_DUST, 2);
+        addRecipe(SlimefunItems.ZINC_DUST, 2);
+        addRecipe(SlimefunItems.MAGNESIUM_DUST, 1);
+        addRecipe(SlimefunItems.SILVER_DUST, 1);
+        addRecipe(SlimefunItems.TIN_DUST, 1);
+        addRecipe(new ItemStack(Material.CLAY_BALL), 5);
         addRecipe(new ItemStack(Material.FLINT), 5);
-        addRecipe(Items.COBALT_DUST, 1);
-        addRecipe(Items.NICKEL_DUST, 2);
-        addRecipe(new ItemStack(Material.IRON_NUGGET), 2);
+        addRecipe(new ItemStack(Material.IRON_NUGGET), 3);
     }
     
     private void addRecipe(ItemStack item, int chance) {
@@ -101,12 +86,12 @@ public final class SimpleSieve extends MultiBlockMachine {
         Inventory outputChest = findOutputChest(b.getRelative(BlockFace.DOWN), output);
 
         if (outputChest != null) {
-            PluginUtils.runSync(() -> {
+            SimpleUtils.inst().runSync(() -> {
                 outputChest.addItem(output);
                 p.playSound(b.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
             }, 40);
         } else {
-            PluginUtils.runSync(() -> {
+            SimpleUtils.inst().runSync(() -> {
                 b.getWorld().dropItemNaturally(b.getLocation().add(0, .5, 0), output);
                 p.playSound(b.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
             }, 40);
