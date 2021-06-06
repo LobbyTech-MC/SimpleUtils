@@ -1,6 +1,20 @@
-package io.github.mooy1.simpleutils.tools;
+package io.github.mooy1.simpleutils.implementation.tools;
 
-import io.github.mooy1.simpleutils.Items;
+import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.annotation.Nonnull;
+
+import org.bukkit.Effect;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import io.github.thebusybiscuit.slimefun4.core.attributes.NotPlaceable;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ToolUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
@@ -13,54 +27,48 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
-import org.bukkit.Effect;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.annotation.Nonnull;
-import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
-
+@Deprecated
 public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> implements NotPlaceable {
-    
+
     private final int radius;
     private final int blocks;
-    
-    public MiningHammer(Category category, Material material, ItemStack metal, String name, int size, int eff) {
+
+    public MiningHammer(Category category, Material material, String name, int size, int eff) {
         super(category, new SlimefunItemStack(
                 ChatUtils.removeColorCodes(name).toUpperCase(Locale.ROOT) + "_MINING_HAMMER",
                 material,
                 name + " 挖矿榔头",
-                "&e在 " + size + "x" + size + " 范围内挖矿"
+                "&4即将弃用，使用爆炸稿子代替"
         ), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
-                metal, metal, metal,
-                metal, Items.HAMMER_ROD, metal,
-                null, Items.HAMMER_ROD, null
+                null, null, null,
+                null, new ItemStack(Material.BARRIER), null,
+                null, null, null
         });
+
         getItem().addUnsafeEnchantment(Enchantment.DIG_SPEED, eff);
-        
+
         // # of extra blocks that will be mined
         this.blocks = size * size - 1;
         this.radius = (size - 1) >> 1;
+
+        setHidden(true);
     }
-    
+
     @Nonnull
     @Override
     public ToolUseHandler getItemHandler() {
         return (e, item, fortune, drops) -> {
             Player p = e.getPlayer();
-            
+
+            if (ThreadLocalRandom.current().nextInt(10) == 0) {
+                p.sendMessage("&4This item is deprecated. It will be removed soon. Use the explosive pick instead.");
+            }
+
             if (p.isSneaking() || !SlimefunPlugin.getProtectionManager().hasPermission(p, e.getBlock(), ProtectableAction.BREAK_BLOCK)) {
                 return;
             }
-            
+
             for (Block b : getBlocks(e.getBlock(), p.getFacing(), p.getLocation().getPitch())) {
                 if (canBreak(p, b)) {
                     breakBlock(p, item, b, fortune);
@@ -79,7 +87,7 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
             }
         };
     }
-    
+
     private static boolean canBreak(Player p, Block b) {
         return !b.isEmpty()
                 && !b.isLiquid()
@@ -93,7 +101,7 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
         b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getType());
 
         Material type = b.getType();
-        
+
         if (type == Material.PLAYER_HEAD || SlimefunTag.SHULKER_BOXES.isTagged(type)) {
             b.breakNaturally(item);
         } else {
@@ -102,11 +110,11 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
             for (ItemStack drop : b.getDrops(item)) {
                 b.getWorld().dropItemNaturally(b.getLocation(), applyFortune ? new CustomItem(drop, fortune) : drop);
             }
-            
+
             b.setType(Material.AIR);
         }
     }
-    
+
     private Block[] getBlocks(Block middle, BlockFace face, float pitch) {
         Block[] arr = new Block[this.blocks];
         int index = 0;
@@ -129,7 +137,7 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
         } else if (face == BlockFace.EAST || face == BlockFace.WEST) {
             for (int z = -this.radius ; z <= this.radius ; z++) {
                 for (int y = -this.radius ; y <= this.radius ; y++) {
-                    if (z !=0 || y != 0) {
+                    if (z != 0 || y != 0) {
                         arr[index++] = middle.getRelative(0, y, z);
                     }
                 }
