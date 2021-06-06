@@ -35,24 +35,25 @@ public final class Items {
     public static final SlimefunItemStack SIEVE = new SlimefunItemStack(
             "SIMPLE_SIEVE",
             Material.COMPOSTER,
-            "&6Simple Sieve",
-            "&7Sifts gravel into dusts and materials"
+            "&6简易筛矿机",
+            "&7将矿石变为矿粉或材料"
     );
     public static final SlimefunItemStack ELEVATOR = new SlimefunItemStack(
             "SIMPLE_ELEVATOR",
             Material.QUARTZ_BLOCK,
-            "&fSimple Elevator",
-            "&7Crouch to go down, Jump to go up"
+            "&f简易电梯",
+            "&7下蹲往下, 跳跃往上"
     );
     public static final SlimefunItemStack WORKBENCH = new SlimefunItemStack(
             "SIMPLE_WORKBENCH",
             Material.CRAFTING_TABLE,
-            "&6Simple Workbench",
-            "&7Can craft both vanilla and slimefun recipes"
+            "&6融合工作台",
+            "&7既可以合成原版工作台物品",
+            "&7也可以合成高级工作台物品"
     );
 
     public static void setup(@Nonnull SimpleUtils plugin) {
-        Category category = new Category(SimpleUtils.inst().getKey("main"), new CustomItem(Material.COMPOSTER, "&6Simple Utils"), 0);
+        Category category = new Category(SimpleUtils.inst().getKey("main"), new CustomItem(Material.COMPOSTER, "&6简易工具"), 0);
 
         // blocks
         new Workbench(category, Items.WORKBENCH, RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -70,10 +71,10 @@ public final class Items {
                 null, SlimefunItems.SILVER_INGOT, null,
                 null, SlimefunItems.ALUMINUM_INGOT, null
         }).register(plugin);
-        new MiningHammer(category, Material.IRON_PICKAXE, SlimefunItems.COPPER_INGOT, "&6Copper", 3, 1).register(plugin);
-        new MiningHammer(category, Material.DIAMOND_PICKAXE, new ItemStack(Material.DIAMOND), "&bDiamond", 3, 2).register(plugin);
-        new MiningHammer(category, Material.IRON_PICKAXE, SlimefunItems.REINFORCED_ALLOY_INGOT, "&7Reinforced", 3, 3).register(plugin);
-        new MiningHammer(category, Material.NETHERITE_PICKAXE, SlimefunItems.CARBONADO, "&8Carbonado", 5, 4).register(plugin);
+        new MiningHammer(category, Material.IRON_PICKAXE, SlimefunItems.COPPER_INGOT, "&6铜", 3, 1).register(plugin);
+        new MiningHammer(category, Material.DIAMOND_PICKAXE, new ItemStack(Material.DIAMOND), "&b钻石", 3, 2).register(plugin);
+        new MiningHammer(category, Material.IRON_PICKAXE, SlimefunItems.REINFORCED_ALLOY_INGOT, "&7强化合金", 3, 3).register(plugin);
+        new MiningHammer(category, Material.NETHERITE_PICKAXE, SlimefunItems.CARBONADO, "&8黑金刚石", 5, 4).register(plugin);
 
         // misc
         new SlimefunItem(category, Items.HAMMER_ROD, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
