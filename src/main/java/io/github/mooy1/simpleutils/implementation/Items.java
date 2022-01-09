@@ -3,6 +3,7 @@ package io.github.mooy1.simpleutils.implementation;
 import java.util.Arrays;
 
 import javax.annotation.Nonnull;
+
 import lombok.experimental.UtilityClass;
 
 import org.bukkit.Material;
@@ -12,14 +13,13 @@ import org.bukkit.inventory.ItemStack;
 import io.github.mooy1.simpleutils.SimpleUtils;
 import io.github.mooy1.simpleutils.implementation.blocks.Elevator;
 import io.github.mooy1.simpleutils.implementation.blocks.Sieve;
-import io.github.mooy1.simpleutils.implementation.tools.MiningHammer;
+import io.github.mooy1.simpleutils.implementation.blocks.Workbench;
 import io.github.mooy1.simpleutils.implementation.tools.Wrench;
-import io.github.mooy1.simpleutils.implementation.blocks.workbench.Workbench;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 
 @UtilityClass
 public final class Items {
@@ -51,7 +51,8 @@ public final class Items {
     );
 
     public static void setup(@Nonnull SimpleUtils plugin) {
-        Category category = new Category(SimpleUtils.inst().getKey("main"), new CustomItem(Material.COMPOSTER, "&6简易工具"), 0);
+        ItemGroup category = new ItemGroup(SimpleUtils.createKey("main"),
+                new CustomItemStack(Material.COMPOSTER, "&6简易工具"), 0);
 
         new Workbench(category, WORKBENCH, RecipeType.ENHANCED_CRAFTING_TABLE,
                 Arrays.copyOf(new ItemStack[] {new ItemStack(Material.CRAFTING_TABLE)}, 9)
@@ -74,11 +75,6 @@ public final class Items {
                 null, SlimefunItems.SILVER_INGOT, null,
                 null, SlimefunItems.ALUMINUM_INGOT, null
         }).register(plugin);
-
-        new MiningHammer(category, Material.IRON_PICKAXE, "&6铜", 3, 1).register(plugin);
-        new MiningHammer(category, Material.DIAMOND_PICKAXE,  "&b钻石", 3, 2).register(plugin);
-        new MiningHammer(category, Material.IRON_PICKAXE,  "&7强化合金", 3, 3).register(plugin);
-        new MiningHammer(category, Material.NETHERITE_PICKAXE,  "&8黑金刚石", 5, 4).register(plugin);
     }
 
 }

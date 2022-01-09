@@ -1,10 +1,13 @@
 package io.github.mooy1.simpleutils.implementation.blocks;
 
 import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -15,21 +18,27 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import io.github.mooy1.infinitylib.common.Events;
 import io.github.mooy1.simpleutils.SimpleUtils;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.utils.tags.SlimefunTag;
+import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 
 public final class Elevator extends SlimefunItem implements Listener {
 
     private final BiMap<Location, Location> locations = HashBiMap.create();
 
-    public Elevator(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+    public Elevator(ItemGroup category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
-        SimpleUtils.inst().registerListener(this);
+
+        Events.registerListener(this);
+
         addItemHandler(new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(@Nonnull BlockBreakEvent e, @Nonnull ItemStack item, @Nonnull List<ItemStack> drops) {
@@ -38,16 +47,38 @@ public final class Elevator extends SlimefunItem implements Listener {
                 Elevator.this.locations.inverse().remove(l);
             }
         });
+
+        addItemHandler(new BlockTicker() {
+            @Override
+            public boolean isSynchronized() {
+                return true;
+            }
+
+            @Override
+            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
+                if (SimpleUtils.slimefunTickCount() % 16 == 0 && block.getY() > block.getWorld().getMinHeight()) {
+                    Material type = block.getRelative(0, -1, 0).getType();
+                    if (type.isOccluding() && !SlimefunTag.UNBREAKABLE_MATERIALS.isTagged(type)) {
+                        block.setType(type);
+                    } else {
+                        block.setType(getItem().getType());
+                    }
+                }
+            }
+        });
     }
 
     @EventHandler
     private void onJump(@Nonnull PlayerMoveEvent e) {
-        if (e.getTo() != null && e.getTo().getY() > e.getFrom().getY() && e.getFrom().getY() - e.getFrom().getBlockY() < 0.05) {
+        if (e.getTo() != null && e.getTo().getY() > e.getFrom().getY()
+                && e.getFrom().getY() - e.getFrom().getBlockY() < 0.05) {
             Location check = elevatorUnder(e.getFrom());
+
             if (BlockStorage.check(check, getId())) {
                 teleport(e, this.locations.computeIfAbsent(check, elev -> {
+                    int max = elev.getWorld().getMaxHeight();
                     elev.add(0, 2, 0);
-                    while (elev.add(0, 1, 0).getY() < 256) {
+                    while (elev.add(0, 1, 0).getY() < max) {
                         if (BlockStorage.check(elev, getId())) {
                             return elev;
                         }
@@ -62,10 +93,12 @@ public final class Elevator extends SlimefunItem implements Listener {
     private void onCrouch(@Nonnull PlayerToggleSneakEvent e) {
         if (e.isSneaking()) {
             Location check = elevatorUnder(e.getPlayer().getLocation());
+
             if (BlockStorage.check(check, getId())) {
                 teleport(e, this.locations.inverse().computeIfAbsent(check, elev -> {
+                    int min = elev.getWorld().getMinHeight();
                     elev.subtract(0, 2, 0);
-                    while (elev.subtract(0, 1, 0).getY() > -1) {
+                    while (elev.subtract(0, 1, 0).getY() >= min) {
                         if (BlockStorage.check(elev, getId())) {
                             return elev;
                         }
