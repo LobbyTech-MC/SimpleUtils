@@ -1,7 +1,9 @@
 package io.github.mooy1.simpleutils.implementation.tools;
 
 import java.util.Locale;
+import java.util.Locale.Category;
 import java.util.concurrent.ThreadLocalRandom;
+
 import javax.annotation.Nonnull;
 
 import org.bukkit.Effect;
@@ -15,18 +17,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.NotPlaceable;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ToolUseHandler;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
 import io.github.thebusybiscuit.slimefun4.utils.tags.SlimefunTag;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
-import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 @Deprecated
 public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> implements NotPlaceable {
@@ -34,7 +36,7 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
     private final int radius;
     private final int blocks;
 
-    public MiningHammer(Category category, Material material, String name, int size, int eff) {
+    public MiningHammer(ItemGroup category, Material material, String name, int size, int eff) {
         super(category, new SlimefunItemStack(
                 ChatUtils.removeColorCodes(name).toUpperCase(Locale.ROOT) + "_MINING_HAMMER",
                 material,
@@ -65,7 +67,7 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
                 p.sendMessage("&4This item is deprecated. It will be removed soon. Use the explosive pick instead.");
             }
 
-            if (p.isSneaking() || !SlimefunPlugin.getProtectionManager().hasPermission(p, e.getBlock(), ProtectableAction.BREAK_BLOCK)) {
+            if (p.isSneaking() || !Slimefun.getProtectionManager().hasPermission(p, e.getBlock(), Interaction.BREAK_BLOCK)) {
                 return;
             }
 
@@ -92,12 +94,12 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
         return !b.isEmpty()
                 && !b.isLiquid()
                 && !SlimefunTag.UNBREAKABLE_MATERIALS.isTagged(b.getType())
-                && SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.BREAK_BLOCK)
+                && Slimefun.getProtectionManager().hasPermission(p, b.getLocation(), Interaction.BREAK_BLOCK)
                 && !BlockStorage.hasBlockInfo(b);
     }
 
     private static void breakBlock(Player p, ItemStack item, Block b, int fortune) {
-        SlimefunPlugin.getProtectionManager().logAction(p, b, ProtectableAction.BREAK_BLOCK);
+        Slimefun.getProtectionManager().logAction(p, b, Interaction.BREAK_BLOCK);
         b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getType());
 
         Material type = b.getType();
@@ -105,10 +107,10 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
         if (type == Material.PLAYER_HEAD || SlimefunTag.SHULKER_BOXES.isTagged(type)) {
             b.breakNaturally(item);
         } else {
-            boolean applyFortune = SlimefunTag.FORTUNE_COMPATIBLE_ORES.isTagged(type);
+            boolean applyFortune = SlimefunTag.MINER_TALISMAN_TRIGGERS.isTagged(type);
 
             for (ItemStack drop : b.getDrops(item)) {
-                b.getWorld().dropItemNaturally(b.getLocation(), applyFortune ? new CustomItem(drop, fortune) : drop);
+                b.getWorld().dropItemNaturally(b.getLocation(), applyFortune ? new CustomItemStack(drop, fortune) : drop);
             }
 
             b.setType(Material.AIR);
