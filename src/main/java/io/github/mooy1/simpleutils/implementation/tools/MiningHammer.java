@@ -1,7 +1,6 @@
 package io.github.mooy1.simpleutils.implementation.tools;
 
 import java.util.Locale;
-import java.util.Locale.Category;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.Nonnull;
@@ -48,7 +47,7 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
                 null, null, null
         });
 
-        getItem().addUnsafeEnchantment(Enchantment.DIG_SPEED, eff);
+        getItem().addUnsafeEnchantment(Enchantment.EFFICIENCY, eff);
 
         // # of extra blocks that will be mined
         this.blocks = size * size - 1;
@@ -77,7 +76,7 @@ public final class MiningHammer extends SimpleSlimefunItem<ToolUseHandler> imple
                 }
             }
 
-            if (ThreadLocalRandom.current().nextInt(3 - this.radius + item.getEnchantmentLevel(Enchantment.DURABILITY)) == 0) {
+            if (ThreadLocalRandom.current().nextInt(3 - this.radius + item.getEnchantmentLevel(Enchantment.UNBREAKING)) == 0) {
                 Damageable damageable = (Damageable) item.getItemMeta();
                 damageable.setDamage(damageable.getDamage() + 1);
                 if (damageable.getDamage() >= item.getType().getMaxDurability()) {

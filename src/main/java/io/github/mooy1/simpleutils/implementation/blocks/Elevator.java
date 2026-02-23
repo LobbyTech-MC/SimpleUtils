@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+
 import io.github.mooy1.infinitylib.common.Events;
 import io.github.mooy1.simpleutils.SimpleUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
